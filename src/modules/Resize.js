@@ -65,8 +65,23 @@ export class Resize extends BaseModule {
         this.setCursor(this.dragBox.style.cursor);
         // listen for movement and mouseup
         document.addEventListener('mousemove', this.handleDrag, false);
+        document.addEventListener('touchmove', this.handleTouchMove, false);
         document.addEventListener('mouseup', this.handleMouseup, false);
+        document.addEventListener('touchend', this.handleTouchEnd, false);
     };
+
+    handleTouchMove = (evt) => {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        const clickEvt = document.createEvent('MouseEvent');
+        clickEvt.initMouseEvent('mousemove', true, true, window, evt.detail, 
+            evt.touches[0].screenX, evt.touches[0].screenY, 
+            evt.touches[0].clientX, evt.touches[0].clientY, 
+            false, false, false, false, 
+            0, null);
+        document.dispatchEvent(clickEvt);
+    }
 
     handleMouseup = () => {
         // reset cursor everywhere
@@ -75,6 +90,11 @@ export class Resize extends BaseModule {
         document.removeEventListener('mousemove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleMouseup);
     };
+
+    handleTouchEnd = () => {
+        document.removeEventListener('touchmove', this.handleTouch);
+        document.removeEventListener('touchend', this.handleTouchEnd);
+    }
 
     handleDrag = (evt) => {
         if (!this.img) {
