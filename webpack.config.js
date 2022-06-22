@@ -28,6 +28,11 @@ module.exports = {
                     loader: 'raw-loader'
                 }]
             }
-        ]
+        ],
+		plugins: [
+  			new webpack.ProvidePlugin({
+    			'window.Quill': 'quill'
+  			})
+		]
     }
 };
